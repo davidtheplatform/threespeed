@@ -1,0 +1,8 @@
+*.o
+main
+a.out
+.vscode/
+__pycache__/
+temp/
+*.gch
+projects/
