@@ -12,9 +12,7 @@ std::vector<std::shared_ptr<ts::Thread>> ts::active_threads;
 ts::Sprite* ts::current_sprite;
 
 void ts::tick_threads() {
-    printf("tick\n");
     for (int i = 0; i < ts::active_threads.size(); i++) {
-        printf("thread\n");
         current_sprite = ts::active_threads[i]->sprite;
         ThreadSignal result = ts::active_threads[i]->resume();
         if (result.result & thread_signal::EXIT) {

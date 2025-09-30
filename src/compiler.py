@@ -283,13 +283,7 @@ class StackBlock(Block):
             if self.warp:
                 raise Exception("event_broadcastandwait inside warping custom blocks is not implemented")
             else:
-                out = f'''ts::block::event_broadcast({self.inputs['BROADCAST'].serialize()});
-{{
-    if (!ts::active_threads.empty()) {{
-        ts::Thread* last_thread = ts::active_threads.back()
-        CUSTOM_CALL(ts::block::event_broadcastandwait({self.inputs['BROADCAST'].serialize()}))
-    }}
-}}'''
+                out = f'CUSTOM_CALL(ts::block::event_broadcastandwait({self.inputs['BROADCAST_INPUT'].serialize()}));\n'
         else:
             out = super().serialize() + ';\n'
         if self.next is not None:
@@ -316,10 +310,18 @@ class CustomBlockCall(Block):
             
     def serialize(self):
         if self.mutation['proccode'] not in custom_blocks:
+            out = ''
+            if self.mutation['proccode'] == 'â€‹â€‹logâ€‹â€‹ %s':
+                out = f'LOG_INFO({self.inputs["arg0"].serialize()});\n'
+            if self.mutation['proccode'] == 'â€‹â€‹warnâ€‹â€‹ %s':
+                out = f'LOG_WARN({self.inputs["arg0"].serialize()});\n'
+            if self.mutation['proccode'] == 'â€‹â€‹errorâ€‹â€‹ %s':
+                out = f'LOG_ERROR({self.inputs["arg0"].serialize()});\n'
+
             if self.next is not None:
-                return self.next.serialize()
-            else:
-                return ''
+                out += self.next.serialize()
+            
+            return out
         
         if self.warp:
             out = f'{make_ts_id(f"{list(self.all_blocks.keys())[0]}__{self.mutation['proccode']}")}_warp('
