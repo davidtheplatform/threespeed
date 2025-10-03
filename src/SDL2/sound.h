@@ -15,6 +15,8 @@ void stop_sound(SoundHandle* handle);
 void set_volume(SoundHandle* handle, double volume);
 void stop_all();
 
+bool is_playing(SoundHandle* handle);
+
 std::string getError();
 
 };  // namespace ts

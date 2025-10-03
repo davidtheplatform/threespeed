@@ -33,6 +33,20 @@ namespace ts::block {
         }
     }
 
+    ts::Thread sound_playuntildone(std::string sound) {
+        if (ts::current_sprite->sound_names.contains(sound)) {
+            auto s = ts::current_sprite->sound_names[sound];
+            auto handle = ts::sound::start_sound(s, ts::current_sprite->volume / 100.0);
+            ts::current_sprite->active_sounds.emplace_back(handle);
+            
+            while (ts::sound::is_playing(handle)) {
+                co_yield {ts::thread_signal::YIELD};
+            }   
+        }
+
+        co_return {ts::thread_signal::EXIT};
+    }
+
     ts::Number sound_volume() {
         return ts::current_sprite->volume;
     }

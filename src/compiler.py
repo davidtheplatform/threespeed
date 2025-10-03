@@ -284,6 +284,8 @@ class StackBlock(Block):
                 raise Exception("event_broadcastandwait inside warping custom blocks is not implemented")
             else:
                 out = f'CUSTOM_CALL(ts::block::event_broadcastandwait({self.inputs['BROADCAST_INPUT'].serialize()}));\n'
+        elif self.opcode == 'sound_playuntildone':
+            out = f'CUSTOM_CALL(ts::block::sound_playuntildone({self.inputs['SOUND_MENU'].serialize()}));\n'
         else:
             out = super().serialize() + ';\n'
         if self.next is not None:

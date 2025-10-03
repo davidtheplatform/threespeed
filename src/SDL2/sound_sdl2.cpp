@@ -100,6 +100,10 @@ void stop_all() {
     }
 }
 
+bool is_playing(SoundHandle* handle) {
+    return !handle->finished;
+}
+
 std::string getError() {
     return Mix_GetError();
 }
