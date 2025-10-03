@@ -6,6 +6,7 @@
 
 #include "motion.h"
 #include "looks.h"
+#include "sound.h"
 #include "events.h"
 #include "control.h"
 #include "operators.h"

@@ -5,7 +5,7 @@
 #include <map>
 #include "SDL2/SDL2.h"
 #include "SDL2/SDL_image.h"
-#include "SDL2/SDL_mixer.h"
+#include "SDL2/sound.h"
 #include "Events.h"
 #include "Logger.h"
 #include "Color.h"
@@ -50,9 +50,10 @@ namespace ts
         /// sound ///
         double volume = 100;
 
-        std::vector<Mix_Chunk *> sounds;
-        std::map<std::string, Mix_Chunk *> sound_names;
+        std::vector<ts::sound::Sound*> sounds;
+        std::map<std::string, ts::sound::Sound*> sound_names;
         std::map<std::string, int> sound_numbers;
+        std::vector<ts::sound::SoundHandle*> active_sounds;
 
         /// data ///
         void* personal_variables;

@@ -4,16 +4,15 @@ namespace ts
 {
     void Sprite::load_sound(std::string filename, std::string soundName)
     {
-        Mix_Chunk *chunk = Mix_LoadWAV(filename.c_str());
-
-        if (chunk == NULL)
-        {
-            LOG_ERROR("Failed to load " + filename + " (" + Mix_GetError() + ")");
-            exit(-1);
+        ts::sound::Sound* s = ts::sound::load_sound(filename);
+        if (s == nullptr) {
+            LOG_ERROR("Failed to load sound " + soundName + " from " + filename);
+            LOG_ERROR(ts::sound::getError());
+            return;
         }
 
-        sounds.emplace_back(chunk);
-        sound_names.emplace(soundName, chunk);
+        sounds.emplace_back(s);
+        sound_names.emplace(soundName, s);
         sound_numbers.emplace(soundName, sounds.size() - 1);
 
         LOG_INFO("Loaded sound " + soundName + " from " + filename);

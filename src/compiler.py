@@ -587,6 +587,11 @@ def generate(project):
                 setup += f'{sprite_id}->load_costume("{costume["md5ext"]}", {escape_string(costume["name"])}, {escape_string(costume["rotationCenterX"])}, {escape_string(costume["rotationCenterY"])});\n' # TODO rotation offset
             else:
                 raise Exception(f'Costume md5ext is invalid ("{repr(costume["md5ext"])}")')
+        for sound in sprite['sounds']:
+            if verify_asset_name(sound["md5ext"]):
+                setup += f'{sprite_id}->load_sound("{sound["md5ext"]}", {escape_string(sound["name"])});\n'
+            else:
+                raise Exception(f'Sound md5ext is invalid ("{repr(sound["md5ext"])}")')
             
     for monitor in project['monitors']:
         # built in variables like loudness have no params

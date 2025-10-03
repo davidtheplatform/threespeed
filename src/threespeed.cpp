@@ -19,6 +19,7 @@ void ts::init() {
     SDL_Init(SDL_INIT_EVERYTHING);
 
     ts::init_renderer();
+    ts::sound::init_sound();
     ts::init_listloader();
 
     timerStartTime = SDL_GetTicks64();

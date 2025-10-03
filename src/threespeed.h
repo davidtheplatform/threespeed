@@ -17,6 +17,7 @@
 #include "rendering/Render.h"
 
 #include "listLoader.h"
+#include "SDL2/sound.h"
 
 #include <exception>
 
