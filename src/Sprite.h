@@ -12,6 +12,8 @@
 
 namespace ts
 {
+    class Sprite;
+    extern Sprite* stage;
 
     /**
      * Represents a single target.
@@ -82,6 +84,8 @@ namespace ts
         {
             renderer = r;
             name = n;
+
+            if (name == "Stage") ts::stage = this;
         }
     };
 };
