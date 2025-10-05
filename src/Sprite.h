@@ -9,6 +9,7 @@
 #include "Events.h"
 #include "Logger.h"
 #include "Color.h"
+#include "rendering/effects.h"
 
 namespace ts
 {
@@ -36,18 +37,24 @@ namespace ts
 
         int current_costume;
         std::vector<SDL_Texture *> costumes;
+        std::vector<SDL_Surface *> costumes_s;
         std::map<std::string, SDL_Texture *> costume_names;
         std::vector<std::string> costume_names_v;
         std::map<std::string, int> costume_numbers;
         std::vector<std::pair<int, int>> costume_offsets;
 
-        std::string text;
-        bool saying;
-        bool thinking;
+        std::string text = "";
+        bool saying = false;
+        bool thinking = false;
 
         bool shown;
 
         double size;
+
+        Effects effects;
+        // whether the sprite's effects have changed and need to be re-rendered
+        bool effects_updated = false;
+        SDL_Texture *after_effects;
 
         /// sound ///
         double volume = 100;
@@ -76,6 +83,7 @@ namespace ts
         void load_costume(std::string filename, std::string costumeName, int x_offset, int y_offset);
 
         SDL_Texture *get_texture();
+        SDL_Surface *get_surface();
 
         // pretty sure this won't end up doing anything
         void update() {}

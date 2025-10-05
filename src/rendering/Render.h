@@ -14,6 +14,7 @@ namespace ts {
     extern SDL_Renderer *renderer;
 
     extern std::vector<Sprite*> sprites;
+    extern std::vector<Sprite*> layers;
 
     int init_renderer();
 

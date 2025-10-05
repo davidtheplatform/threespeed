@@ -32,11 +32,12 @@ void ts::run() {
             ts::tick();
 
             uint64_t frame_time = (SDL_GetTicks64() - last_frame);
-            if (frame_time < 1000/30) continue;
+            // if (frame_time < 1000/30) continue;
             
             last_frame = SDL_GetTicks64();
             ts::render();
-            // SDL_Delay(1000/30 - frame_time);
+            if (frame_time > 1000.0/30) continue;
+            SDL_Delay(1000.0/30 - frame_time);
         }
     } catch (CloseInput) {
         ts::quit();

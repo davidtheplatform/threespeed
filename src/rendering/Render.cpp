@@ -54,6 +54,12 @@ namespace ts {
     }
 
     void render_sprite(SDL_Renderer* renderer, ts::Sprite* s) {
+        if (s->effects_updated) {
+            SDL_Surface* new_surf = ts::apply_effects(s->get_surface(), s->effects);
+            s->effects_updated = false;
+            s->after_effects = SDL_CreateTextureFromSurface(renderer, new_surf);
+        }
+
         SDL_Rect dstRect;
         dstRect.x = s->x + 240 - s->costume_offsets[s->current_costume].first;
         dstRect.y = s->y + 180 - s->costume_offsets[s->current_costume].second; // TODO figure out how offsets work

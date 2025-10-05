@@ -21,14 +21,17 @@ namespace ts
     void Sprite::load_costume(std::string filename, std::string costumeName, int x_offset, int y_offset)
     {
         SDL_Texture *texture = IMG_LoadTexture(renderer, filename.c_str());
+        SDL_Surface *surface = IMG_Load(filename.c_str());
 
-        if (texture == NULL)
+        if (texture == NULL || surface == NULL)
         {
             if (std::string(SDL_GetError()) == "Couldn't parse SVG image")
             {
                 LOG_WARN("Invalid SVG image: " + filename);
                 SDL_DestroyTexture(texture);
+                SDL_FreeSurface(surface);
                 texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_STATIC, 1, 1); // TODO: load the question mark costume instead
+                surface = SDL_CreateRGBSurface(0, 1, 1, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
             }
             else
             {
@@ -38,6 +41,7 @@ namespace ts
         }
 
         costumes.emplace_back(texture);
+        costumes_s.emplace_back(surface);
         costume_names.emplace(costumeName, texture);
         costume_numbers.emplace(costumeName, costumes.size() - 1);
         costume_offsets.emplace_back(std::pair<int, int>(x_offset, y_offset));
@@ -51,6 +55,11 @@ namespace ts
      */
     SDL_Texture *Sprite::get_texture()
     {
-        return costumes[current_costume];
+        return after_effects;
+    }
+
+    SDL_Surface *Sprite::get_surface()
+    {
+        return costumes_s[current_costume];
     }
 };

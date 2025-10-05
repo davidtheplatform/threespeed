@@ -497,11 +497,17 @@ def generate(project):
     
     setup = "int main() {\nts::init();\n"
     
+    sprite_layers = {}
     for sprite in project['targets']:
         sprite_name = sprite["name"]
         sprite_id = make_ts_id(sprite_name)
         out += f'\n\n/***** {sprite_name} *****/\n\n'
         out += f'ts::Sprite *{sprite_id};\n'
+
+        layer = sprite['layerOrder']
+        if sprite['layerOrder'] in sprite_layers:
+            layer = max(sprite_layers.keys()) + 1
+        sprite_layers[layer] = sprite_id
         
         personal_variable_out = f'struct variables_{make_ts_id(sprite_name)} {{\n'
         for variable in sprite['variables']:
@@ -533,11 +539,17 @@ def generate(project):
         out += personal_variable_out
             
         out += f'variables_{make_ts_id(sprite_name)} variables_{make_ts_id(sprite_name)}_default;\n'
-        setup += f'{sprite_id} = new ts::Sprite(ts::renderer, {escape_string(sprite_name)});\n'
-        setup += f'ts::current_sprite = {sprite_id};\n'
-        setup += f'{sprite_id}->personal_variables = &variables_{make_ts_id(sprite_name)}_default;\n'
-        setup += f'{sprite_id}->personal_variables_size = sizeof(variables_{make_ts_id(sprite_name)});\n'
-        setup += f'ts::register_sprite({sprite_id});\n'
+        setup += f'''{sprite_id} = new ts::Sprite(ts::renderer, {escape_string(sprite_name)});
+ts::current_sprite = {sprite_id};
+{sprite_id}->personal_variables = &variables_{make_ts_id(sprite_name)}_default;
+{sprite_id}->personal_variables_size = sizeof(variables_{make_ts_id(sprite_name)});
+ts::register_sprite({sprite_id});
+{sprite_id}->current_costume = {sprite['currentCostume']};\n'''
+        if sprite['name'] != 'Stage':
+            setup += f'ts::current_sprite->shown = {'true' if sprite['visible'] else 'false'};\n'
+        else:
+            setup += f'ts::current_sprite->shown = true;\n'
+        
         
         # check which custom blocks exist
         for block in sprite['blocks'].values():
@@ -596,6 +608,11 @@ def generate(project):
                 setup += f'{sprite_id}->load_sound("{sound["md5ext"]}", {escape_string(sound["name"])});\n'
             else:
                 raise Exception(f'Sound md5ext is invalid ("{repr(sound["md5ext"])}")')
+        setup += f'{sprite_id}->after_effects = {sprite_id}->costumes[{sprite_id}->current_costume];\n'
+            
+    for s in sorted(sprite_layers.keys()):
+        setup += f'ts::layers.push_back({sprite_layers[s]});\n'
+        setup += f'{sprite_layers[s]}->layer = {s};\n'
             
     for monitor in project['monitors']:
         # built in variables like loudness have no params

@@ -23,6 +23,7 @@ namespace ts::block {
 
     void looks_switchcostumeto(ts::String costume) {
         ts::current_sprite->current_costume = ts::current_sprite->costume_numbers.at(costume);
+        ts::current_sprite->effects_updated = true;
     }
 
     ts::String looks_costume(ts::String costume) {
@@ -31,6 +32,7 @@ namespace ts::block {
 
     void looks_switchbackdropto(ts::String backdrop) {
         ts::stage->current_costume = ts::stage->costume_numbers.at(backdrop);
+        ts::stage->effects_updated = true;
     }
     ts::String looks_backdrops(ts::String backdrop) {
         return backdrop;
@@ -47,7 +49,61 @@ namespace ts::block {
         }
     }
 
-    void looks_seteffectto(ts::Number value, ts::String effect) {
-        LOG_WARN(ts::current_sprite->name + ": looks_seteffectto(" + std::string(value) + ", " + std::string(effect) + ")");
+    void looks_seteffectto(ts::Number value, ts::String e) {
+        std::string effect = e.value;
+        if (effect == "COLOR") {
+            ts::current_sprite->effects.color = value;
+        }
+        else if (effect == "FISHEYE") {
+            ts::current_sprite->effects.fisheye = value;
+        }
+        else if (effect == "WHIRL") {
+            ts::current_sprite->effects.whirl = value;
+        }
+        else if (effect == "PIXELATE") {
+            ts::current_sprite->effects.pixelate = value;
+        }
+        else if (effect == "MOSAIC") {
+            ts::current_sprite->effects.mosaic = value;
+        }
+        else if (effect == "BRIGHTNESS") {
+            ts::current_sprite->effects.brightness = value;
+        }
+        else if (effect == "GHOST") {
+            ts::current_sprite->effects.ghost = value;
+        }
+
+        ts::current_sprite->effects_updated = true; // TODO only update if the new value is actually different
+    }
+    void looks_changeeffectby(ts::Number v, ts::String e) {
+        std::string effect = e.value;
+        double value = v;
+        if (effect == "COLOR") {
+            ts::current_sprite->effects.color += value;
+        }
+        else if (effect == "FISHEYE") {
+            ts::current_sprite->effects.fisheye += value;
+        }
+        else if (effect == "WHIRL") {
+            ts::current_sprite->effects.whirl += value;
+        }
+        else if (effect == "PIXELATE") {
+            ts::current_sprite->effects.pixelate += value;
+        }
+        else if (effect == "MOSAIC") {
+            ts::current_sprite->effects.mosaic += value;
+        }
+        else if (effect == "BRIGHTNESS") {
+            ts::current_sprite->effects.brightness += value;
+        }
+        else if (effect == "GHOST") {
+            ts::current_sprite->effects.ghost += value;
+        }
+
+        ts::current_sprite->effects_updated = true;
+    }
+    void looks_cleargraphiceffects() {
+        ts::current_sprite->effects = {0, 0, 0, 0, 0, 0, 0};
+        ts::current_sprite->effects_updated = true;
     }
 };

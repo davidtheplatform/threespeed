@@ -20,4 +20,6 @@ namespace ts::block
     ts::Value looks_costumenumbername(ts::String option);
 
     void looks_seteffectto(ts::Number value, ts::String effect);
+    void looks_changeeffectby(ts::Number value, ts::String effect);
+    void looks_cleargraphiceffects();
 };
