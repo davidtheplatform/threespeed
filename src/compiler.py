@@ -281,7 +281,9 @@ class StackBlock(Block):
             out = f'ts::block::control_create_clone_of<variables_{make_ts_id(sprite_name)}>({self.inputs['CLONE_OPTION'].serialize()});\n'
         elif self.opcode == 'event_broadcastandwait':
             if self.warp:
-                raise Exception("event_broadcastandwait inside warping custom blocks is not implemented")
+                # TODO implement broadcastandwait in warping custom blocks
+                # this will broadcast but not wait
+                out = f'ts::block::event_broadcast({self.inputs['BROADCAST_INPUT'].serialize()});\n'
             else:
                 out = f'CUSTOM_CALL(ts::block::event_broadcastandwait({self.inputs['BROADCAST_INPUT'].serialize()}));\n'
         elif self.opcode == 'sound_playuntildone':
